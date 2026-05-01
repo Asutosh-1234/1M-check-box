@@ -28,8 +28,8 @@ async function rateLimit(socket) {
 	const ip = socket.handshake.address;
 	const key = `rateLimit:${ip}`;
 	const now = Date.now();
-	const windowMs = 60 * 1000;
-	const max = 10;
+	const windowMs = 5 * 1000;
+	const max = 2;
 
 	await redis.zremrangebyscore(key, 0, now - windowMs);
 	const count = await redis.zcard(key);

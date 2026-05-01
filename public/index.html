@@ -199,6 +199,18 @@
 			console.log("user checked", data);
 			document.getElementById(`check-${data.index}`).checked = data.checked;
 		})
+
+		socket.on("error", (err) => {
+			if (err.message === "Too many requests") {
+				// disable all checkboxes for 5 seconds
+				const checkboxes = document.querySelectorAll("input[type='checkbox']");
+				checkboxes.forEach(cb => cb.disabled = true);
+
+				setTimeout(() => {
+					checkboxes.forEach(cb => cb.disabled = false);
+				}, 5000);
+			}
+		})
 	</script>
 </body>
 
