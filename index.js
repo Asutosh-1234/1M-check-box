@@ -7,6 +7,29 @@ import { Server } from "socket.io";
 import { publisher, subscriber, redis } from "./redis-connection.js";
 
 
+async function rateLimit(socket) {
+	const ip = socket.handshake.address;
+	const key = `rateLimit:${ip}`;
+	const now = Date.now();
+	const windowMs = 60 * 1000; // 1 minute
+	const max = 10;
+
+	// Remove old requests outside the window
+	await redis.zremrangebyscore(key, 0, now - windowMs);
+
+	// Count requests in current window
+	const count = await redis.zcard(key);
+
+	if (count >= max) {
+		return false
+	}
+
+	// Add current request
+	await redis.zadd(key, now, `${now}`);
+	await redis.expire(key, windowMs / 1000);
+	return true;
+}
+
 async function main() {
 	const PORT = process.env.PORT ?? 8000;
 	const app = express();
@@ -34,6 +57,10 @@ async function main() {
 
 		socket.on("user:checked", async (data) => {
 			console.log("user checked", data, { id: socket.id });
+			const allowed = await rateLimit(socket);
+			if (!allowed) {
+				return socket.emit("error", { message: "Too many requests" });
+			}
 
 			const existingState = await redis.get(CHECKBOX_KEY);
 
