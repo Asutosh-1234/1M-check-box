@@ -3,3 +3,13 @@ services:
     image: valkey/valkey
     ports:
       - "6379:6379"
+    
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: location_db
+    ports:
+      - "5432:5432"
