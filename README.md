@@ -151,10 +151,8 @@ To prevent spam and ensure server stability, we utilize a custom Redis-based sli
 
 ## 🖼️ Screenshots or Demo Link
 
-*(Add screenshots of your UI here or link to a live deployed demo)*
+<img width="1919" height="968" alt="image" src="https://github.com/user-attachments/assets/a6a53beb-dad6-484a-8e70-3a6984c0e03f" />
 
-**Example UI View:**
-> A premium, dark-mode focused UI showing a live grid of interactive checkboxes with real-time statistics updating on the fly.
 ## Youtube Link 
 
 https://youtu.be/d_obXQzECNE
